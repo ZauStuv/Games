@@ -19,6 +19,7 @@ class Table
         void addHit(int, int, int);
         bool evaluateHit(int);
         void clearValues();
+        bool checkTableFull();
 
 
 

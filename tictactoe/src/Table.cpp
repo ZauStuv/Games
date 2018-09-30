@@ -460,3 +460,28 @@ void Table::clearValues()
         }
     }
 }
+
+bool Table::checkTableFull()
+{
+    int occupiedFieldCounter = 0, totalFieldCounter;
+
+    totalFieldCounter = _width * _height;
+
+    for(int y=0; y <= _height; y++)
+    {
+        for(int x = 0; x <= _width; x++)
+        {
+            if(_p1hit[y][x] != '\0')
+                occupiedFieldCounter++;
+            if(_p2hit[y][x] != '\0')
+                occupiedFieldCounter++;
+            if(_p3hit[y][x] != '\0')
+                occupiedFieldCounter++;
+            if(_p4hit[y][x] != '\0')
+                occupiedFieldCounter++;
+        }
+    }
+    if(occupiedFieldCounter >= totalFieldCounter)
+        return true;
+    return false;
+}

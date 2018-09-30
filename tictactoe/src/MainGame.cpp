@@ -153,6 +153,14 @@ void MainGame::startGame()
                     break;
                 }
 
+                //check if the table is full
+                if(table1.checkTableFull() == true)
+                {
+                    cout << "The table is full, no one lost.\n";
+                    win = true;
+                    break;
+                }
+
             }
 
         }
