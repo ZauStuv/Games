@@ -3,3 +3,8 @@ tictactoe/tictactoe.cbp
 tictactoe/tictactoe.depend
 tictactoe/tictactoe.layout
 tictactoe/bin/Debug
+ascii_rougelike/obj
+ascii_rougelike/ascii_rougelike.cbp
+ascii_rougelike/ascii_rougelike.depend
+ascii_rougelike/ascii_rougelike.layout
+ascii_rougelike/bin/Debug
