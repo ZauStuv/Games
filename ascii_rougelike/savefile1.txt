@@ -1,0 +1,37 @@
+mysave
+3
+3
+3
+0
+110
+5
+1
+1
+25
+6
+17
+4
+9
+5
+9
+12
+39
+
+Bronze sword
+1
+
+Wooden shield
+1
+
+Iron shield
+1
+
+Antidote
+3
+
+Big mushroom
+2
+
+Mamoothburger
+2
+
