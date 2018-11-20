@@ -12,7 +12,7 @@
     M: Shop. You can buy many useful items here.
     Q: Safe house.
     #: Wall. You cannot walk through this place.
-    H: Door: Press 'E' in front of it to enter to the next level!
+    H: Ladder: Walk onto the ladder to enter to the next level!
 
     Other important notes:
     - Enemies do not move until you move.
