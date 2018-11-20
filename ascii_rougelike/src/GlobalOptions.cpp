@@ -107,10 +107,6 @@ void GlobalOptions::setNumOfEnemies(int num_of_enemies)
 {
     _num_of_enemies = num_of_enemies;
 }
-void GlobalOptions::setStartingBudget(int starting_budget)
-{
-    _starting_budget = starting_budget;
-}
 void GlobalOptions::setSaveDuringGame(bool save_during_game)
 {
     _save_during_game = save_during_game;
@@ -119,8 +115,12 @@ void GlobalOptions::setShopAvailable(bool shop_available)
 {
     _shop_available = shop_available;
 }
+void GlobalOptions::setStartingBudget(int starting_budget)
+{
+    _starting_budget = starting_budget;
+}
 
-
+//getters
 int GlobalOptions::getLife()
 {
     return _life;
@@ -128,10 +128,6 @@ int GlobalOptions::getLife()
 int GlobalOptions::getNumOfEnemies()
 {
     return _num_of_enemies;
-}
-int GlobalOptions::getStartingBudget()
-{
-    return _starting_budget;
 }
 bool GlobalOptions::getSaveDuringGame()
 {
@@ -141,6 +137,11 @@ bool GlobalOptions::getShopAvailable()
 {
     return _shop_available;
 }
+int GlobalOptions::getStartingBudget()
+{
+    return _starting_budget;
+}
+
 
 
 //private getters and setters:

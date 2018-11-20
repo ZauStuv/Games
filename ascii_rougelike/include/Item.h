@@ -31,8 +31,6 @@ class Item
         void setHeal(int heal);
         void setShopPrice(int shopPrice);
         void setSellPrice(int sellPrice);
-        //an unified function for initializing an item:
-        void setEverything(string name, int attack, int defence, int heal, int shopPrice, int sellPrice);
 
 
 

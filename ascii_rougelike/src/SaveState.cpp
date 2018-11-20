@@ -28,6 +28,8 @@ void SaveState::updateItem()
         {
             _items.push_back(*lit);
             _items.back().setPieceOf(getItemCount());
+            _items.back().setAttack(getItemAttack());
+            _items.back().setDefence(getItemDefence());
             break;
         }
     }
@@ -44,15 +46,30 @@ string SaveState::getItemName()
 {
     return _itemName;
 }
+Item SaveState::getAttackItem()
+{
+    return _attackItem;
+}
+Item SaveState::getDefenceItem()
+{
+    return _defenceItem;
+}
 int SaveState::getItemCount()
 {
     return _itemCount;
+}
+int SaveState::getItemAttack()
+{
+    return _itemAttack;
+}
+int SaveState::getItemDefence()
+{
+    return _itemDefence;
 }
 list<Item> SaveState::getItems()
 {
     return _items;
 }
-
 int SaveState::getLevelNumber()
 {
     return _levelNumber;
@@ -81,17 +98,21 @@ char SaveState::getStat()
 {
     return _stat;
 }
-int SaveState::getNumOfEnemies()
+int SaveState::getCurrNumOfEnemies()
 {
-    return _num_of_enemies;
+    return _currNumOfEnemies;
+}
+int SaveState::getMaxNumOfEnemies()
+{
+    return _maxNumOfEnemies;
 }
 bool SaveState::getShopAvailable()
 {
-    return _shop_available;
+    return _shopAvailable;
 }
 bool SaveState::getSaveDuringGame()
 {
-    return _save_during_game;
+    return _saveDuringGame;
 }
 int SaveState::getShopCoordinate1()
 {
@@ -129,9 +150,37 @@ void SaveState::setItemName(string itemName)
 {
     _itemName = itemName;
 }
+void SaveState::setAttackItem(string attackItemName)
+{
+    list<Item>::iterator lit;
+
+    for(lit = _allItems.begin(); lit != _allItems.end(); lit++)
+    {
+        if((*lit).getName() == attackItemName)
+        _attackItem = *lit;
+    }
+}
+void SaveState::setDefenceItem(string defenceItemName)
+{
+    list<Item>::iterator lit;
+
+    for(lit = _allItems.begin(); lit != _allItems.end(); lit++)
+    {
+        if((*lit).getName() == defenceItemName)
+        _defenceItem = *lit;
+    }
+}
 void SaveState::setItemCount(int itemCount)
 {
     _itemCount = itemCount;
+}
+void SaveState::setItemAttack(int itemAttack)
+{
+    _itemAttack = itemAttack;
+}
+void SaveState::setItemDefence(int itemDefence)
+{
+    _itemDefence = itemDefence;
 }
 void SaveState::setLevelNumber(int levelNumber)
 {
@@ -165,17 +214,21 @@ void SaveState::setStat(char stat)
 {
     _stat = stat;
 }
-void SaveState::setNumOfEnemies(int num_of_enemies)
+void SaveState::setCurrNumOfEnemies(int currNumOfEnemies)
 {
-    _num_of_enemies = num_of_enemies;
+    _currNumOfEnemies = currNumOfEnemies;
 }
-void SaveState::setShopAvailable(bool shop_available)
+void SaveState::setMaxNumOfEnemies(int maxNumOfEnemies)
 {
-    _shop_available = shop_available;
+    _maxNumOfEnemies = maxNumOfEnemies;
 }
-void SaveState::setSaveDuringGame(bool save_during_game)
+void SaveState::setShopAvailable(bool shopAvailable)
 {
-    _save_during_game = save_during_game;
+    _shopAvailable = shopAvailable;
+}
+void SaveState::setSaveDuringGame(bool saveDuringGame)
+{
+    _saveDuringGame = saveDuringGame;
 }
 void SaveState::setShopCoordinate1(int shopCoordinate)
 {

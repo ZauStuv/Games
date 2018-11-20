@@ -1,11 +1,10 @@
 #include "Enemy.h"
 
 //define an enemy:
-Enemy::Enemy(int health, int attack, int defence)
+Enemy::Enemy(int health, int attack)
 {
     _health = health;
     _attack = attack;
-    _defence = defence;
 }
 
 bool Enemy::dealDamage(int damage)

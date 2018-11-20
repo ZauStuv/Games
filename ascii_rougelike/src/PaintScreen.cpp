@@ -7,6 +7,12 @@ PaintScreen::PaintScreen()
     //ctor
 }
 
+void PaintScreen::clearScreen()
+{
+    string clearScreenString(50, '\n');
+    cout << clearScreenString;
+}
+
 
 bool PaintScreen::hasListCoordinates(list<Enemy> &cEnemies, int y, int x)
 {
@@ -20,12 +26,6 @@ bool PaintScreen::hasListCoordinates(list<Enemy> &cEnemies, int y, int x)
     return false;
 }
 
-
-void PaintScreen::clearScreen()
-{
-    string clearScreenString(50, '\n');
-    cout << clearScreenString;
-}
 void PaintScreen::messageCannotAfford()
 {
     cout << "You cannot afford to buy it!" << endl;
@@ -34,13 +34,13 @@ void PaintScreen::messageCannotSellEquippedItem()
 {
     cout << "You cannot sell equipped item!" << endl;
 }
-void PaintScreen::messageCannotTossEquippedWearpon()
-{
-    cout << "Cannot toss equipped wearpon!" << endl;
-}
 void PaintScreen::messageCannotTossEquippedShield()
 {
     cout << "Cannot toss equipped shield!" << endl;
+}
+void PaintScreen::messageCannotTossEquippedWearpon()
+{
+    cout << "Cannot toss equipped wearpon!" << endl;
 }
 void PaintScreen::messageCongrats()
 {
@@ -75,6 +75,11 @@ void PaintScreen::messageHealthHealed()
 {
     cout << "Health restored!" << endl;
 }
+void PaintScreen::messageLevelUp()
+{
+    cout << "Level up!" << endl;
+    system("pause");
+}
 void PaintScreen::messageNoEffect()
 {
     cout << "It wouldn't have any effect!" << endl;
@@ -87,21 +92,21 @@ void PaintScreen::messagePoisonHealed()
 {
     cout << "Poisoning healed!" << endl;
 }
-void PaintScreen::messageShieldEquipped()
-{
-    cout << "Shield equipped!" << endl;
-}
 void PaintScreen::messageShieldAlreadyEquipped()
 {
     cout << "Shield already equipped!" << endl;
 }
-void PaintScreen::messageWearponEquipped()
+void PaintScreen::messageShieldEquipped()
 {
-    cout << "Wearpon equipped!" << endl;
+    cout << "Shield equipped!" << endl;
 }
 void PaintScreen::messageWearponAlreadyEquipped()
 {
     cout << "Wearpon already equipped!" << endl;
+}
+void PaintScreen::messageWearponEquipped()
+{
+    cout << "Wearpon equipped!" << endl;
 }
 void PaintScreen::messageYouBecameParalized()
 {
@@ -110,46 +115,6 @@ void PaintScreen::messageYouBecameParalized()
 void PaintScreen::messageYouBecamePoisoned()
 {
     cout << "You became poisoned!" << endl;
-}
-void PaintScreen::paintItems(string item, int itemArrow, int itemArrowCompare)
-{
-    if(itemArrow == itemArrowCompare)
-    {
-        cout << "> ";
-        cout << item << endl;
-    }
-    else
-        cout << "  " << item << endl;
-}
-
-void PaintScreen::paintMenuBack(int itemArrow, int itemArrowCompare)
-{
-    if(itemArrow == itemArrowCompare)
-    {
-        cout << "> ";
-        cout << "Back" << endl << endl;
-    }
-    else
-        cout << "  " << "Back" << endl << endl;
-}
-
-void PaintScreen::paintMenuSell(int itemArrow, int itemArrowCompare)
-{
-    if(itemArrow == itemArrowCompare)
-    {
-        cout << "> Sell" << endl;
-        cout << "  Back" << endl << endl;
-    }
-    else if(itemArrow == itemArrowCompare+1)
-    {
-        cout << "  Sell" << endl;
-        cout << "> Back" << endl << endl;
-    }
-    else
-    {
-        cout << "  Sell" << endl;
-        cout << "  Back" << endl  << endl;
-    }
 }
 
 void PaintScreen::paintItemDetails(string name, string desc, int pieceOf, int attack, int defence, int heal, int buyPrice, int sellPrince, int selectArrow)
@@ -186,163 +151,15 @@ void PaintScreen::paintItemDetails(string name, string desc, int pieceOf, int at
 
 }
 
-void PaintScreen::paintShopItemDetails(string name, string desc, int pieceOf, int attack, int defence, int heal, int buyPrice, int sellPrince, int selectArrow)
+void PaintScreen::paintItems(string item, int itemArrow, int itemArrowCompare)
 {
-    cout << name << endl;
-    cout << desc << endl;
-    cout << pieceOf << " Piece available for sale" << endl;
-    cout << "attack: " << attack << endl;
-    cout << "defence: " << defence << endl;
-    cout << "heal: " << heal << endl;
-    cout << "buy price: " << buyPrice << endl;
-    cout << "sell price: " << sellPrince << endl;
-
-    switch(selectArrow)
+    if(itemArrow == itemArrowCompare)
     {
-        case 0:
-        printf("> Buy\n");
-        printf("  Back\n\n");
-        break;
-
-        case 1:
-        printf("  Buy\n");
-        printf("> Back\n\n");
-        break;
+        cout << "> ";
+        cout << item << endl;
     }
-
-}
-
-
-void PaintScreen::PaintLoadMenu(string name1, string name2, string name3, int arrow)
-{
-    cout << "Select the file to load your progress:\n\n";
-
-    switch(arrow)
-    {
-        case 0:
-            cout << "> " << name1 << endl;
-            cout << "  " << name2 << endl;
-            cout << "  " << name3 << endl << endl;
-            cout << "  " << "Back\n";
-            break;
-
-        case 1:
-            cout << "  " << name1 << endl;
-            cout << "> " << name2 << endl;
-            cout << "  " << name3 << endl << endl;
-            cout << "  " << "Back\n";
-            break;
-
-        case 2:
-            cout << "  " << name1 << endl;
-            cout << "  " << name2 << endl;
-            cout << "> " << name3 << endl << endl;
-            cout << "  " << "Back\n";
-            break;
-
-        case 3:
-            cout << "  " << name1 << endl;
-            cout << "  " << name2 << endl;
-            cout << "  " << name3 << endl << endl;
-            cout << "> " << "Back\n";
-            break;
-
-    }
-}
-
-void PaintScreen::PaintSaveMenu(string name1, string name2, string name3, int arrow)
-{
-    cout << "Select the file to save your progress:\n\n";
-
-    switch(arrow)
-    {
-        case 0:
-            cout << "> " << name1 << endl;
-            cout << "  " << name2 << endl;
-            cout << "  " << name3 << endl << endl;
-            cout << "  " << "Back\n";
-            break;
-
-        case 1:
-            cout << "  " << name1 << endl;
-            cout << "> " << name2 << endl;
-            cout << "  " << name3 << endl << endl;
-            cout << "  " << "Back\n";
-            break;
-
-        case 2:
-            cout << "  " << name1 << endl;
-            cout << "  " << name2 << endl;
-            cout << "> " << name3 << endl << endl;
-            cout << "  " << "Back\n";
-            break;
-
-        case 3:
-            cout << "  " << name1 << endl;
-            cout << "  " << name2 << endl;
-            cout << "  " << name3 << endl << endl;
-            cout << "> " << "Back\n";
-            break;
-
-    }
-}
-
-void PaintScreen::paintSellToShop(Character &cPlayer)
-{
-
-}
-
-void PaintScreen::paintMainMenu(bool (*arrow)[2])
-{
-    //Wipe screen clear:
-    clearScreen();
-
-    //Paint title screen:
-    printf("######################################################################\n");
-    printf("#                                                                    #\n");
-    printf("#    @@@@@@    @@@@     @@@@      @@     @@@@@    @@@@@@   @@@@@     #\n");
-    printf("#    @        @    @   @    @    @  @    @    @   @        @    @    #\n");
-    printf("#    @        @        @        @    @   @    @   @        @    @    #\n");
-    printf("#    @@@@@@    @@@@    @        @@@@@@   @@@@@    @@@@@@   @@@@@     #\n");
-    printf("#    @             @   @        @    @   @        @        @  @      #\n");
-    printf("#    @        @    @   @    @   @    @   @        @        @   @     #\n");
-    printf("#    @@@@@@    @@@@     @@@@    @    @   @        @@@@@@   @    @    #\n");
-    printf("#                                                                    #\n");
-    printf("######################################################################\n\n");
-
-    printf("2018 by Niznize\n\n\n");
-
-
-    if(arrow[0][0] == true)
-        paintMainMenu_newGame();
-    if(arrow[0][1] == true)
-        paintMainMenu_loadGame();
-    if(arrow[1][0] == true)
-        paintMainMenu_options();
-    if(arrow[1][1] == true)
-        paintMainMenu_quit();
-
-}
-void PaintScreen::paintMainMenu_newGame()
-{
-    printf("   > New Game      Options\n");
-    printf("     Load Game     Quit\n");
-
-}
-void PaintScreen::paintMainMenu_options()
-{
-    printf("     New Game    > Options\n");
-    printf("     Load Game     Quit\n");
-}
-void PaintScreen::paintMainMenu_loadGame()
-{
-    printf("     New Game      Options\n");
-    printf("   > Load Game     Quit\n");
-}
-void PaintScreen::paintMainMenu_quit()
-{
-    printf("     New Game      Options\n");
-    printf("     Load Game   > Quit\n");
+    else
+        cout << "  " << item << endl;
 }
 
 void PaintScreen::paintLevelMap(char levelMap[MAX_LEVEL_DIMENSION][MAX_LEVEL_DIMENSION], int *pPlayer, int *pShop, int *pSaveState, list<Enemy> &cEnemies, int ladderCoordinates[2])
@@ -383,6 +200,104 @@ void PaintScreen::paintLevelMap(char levelMap[MAX_LEVEL_DIMENSION][MAX_LEVEL_DIM
     cout << endl;
 }
 
+void PaintScreen::PaintLoadMenu(string name1, string name2, string name3, int arrow)
+{
+    cout << "Select the file to load your progress:\n\n";
+
+    switch(arrow)
+    {
+        case 0:
+            cout << "> " << name1 << endl;
+            cout << "  " << name2 << endl;
+            cout << "  " << name3 << endl << endl;
+            cout << "  " << "Back\n";
+            break;
+
+        case 1:
+            cout << "  " << name1 << endl;
+            cout << "> " << name2 << endl;
+            cout << "  " << name3 << endl << endl;
+            cout << "  " << "Back\n";
+            break;
+
+        case 2:
+            cout << "  " << name1 << endl;
+            cout << "  " << name2 << endl;
+            cout << "> " << name3 << endl << endl;
+            cout << "  " << "Back\n";
+            break;
+
+        case 3:
+            cout << "  " << name1 << endl;
+            cout << "  " << name2 << endl;
+            cout << "  " << name3 << endl << endl;
+            cout << "> " << "Back\n";
+            break;
+
+    }
+}
+
+void PaintScreen::paintMainMenu(bool (*arrow)[2])
+{
+    //Wipe screen clear:
+    clearScreen();
+
+    //Paint title screen:
+    printf("######################################################################\n");
+    printf("#                                                                    #\n");
+    printf("#    @@@@@@    @@@@     @@@@      @@     @@@@@    @@@@@@   @@@@@     #\n");
+    printf("#    @        @    @   @    @    @  @    @    @   @        @    @    #\n");
+    printf("#    @        @        @        @    @   @    @   @        @    @    #\n");
+    printf("#    @@@@@@    @@@@    @        @@@@@@   @@@@@    @@@@@@   @@@@@     #\n");
+    printf("#    @             @   @        @    @   @        @        @  @      #\n");
+    printf("#    @        @    @   @    @   @    @   @        @        @   @     #\n");
+    printf("#    @@@@@@    @@@@     @@@@    @    @   @        @@@@@@   @    @    #\n");
+    printf("#                                                                    #\n");
+    printf("######################################################################\n\n");
+
+    printf("2018 by Niznize\n\n\n");
+
+
+    if(arrow[0][0] == true)
+        paintMainMenu_newGame();
+    if(arrow[0][1] == true)
+        paintMainMenu_loadGame();
+    if(arrow[1][0] == true)
+        paintMainMenu_options();
+    if(arrow[1][1] == true)
+        paintMainMenu_quit();
+
+}
+
+void PaintScreen::paintMenuBack(int itemArrow, int itemArrowCompare)
+{
+    if(itemArrow == itemArrowCompare)
+    {
+        cout << "> ";
+        cout << "Back" << endl << endl;
+    }
+    else
+        cout << "  " << "Back" << endl << endl;
+}
+
+void PaintScreen::paintMenuSell(int itemArrow, int itemArrowCompare)
+{
+    if(itemArrow == itemArrowCompare)
+    {
+        cout << "> Sell" << endl;
+        cout << "  Back" << endl << endl;
+    }
+    else if(itemArrow == itemArrowCompare+1)
+    {
+        cout << "  Sell" << endl;
+        cout << "> Back" << endl << endl;
+    }
+    else
+    {
+        cout << "  Sell" << endl;
+        cout << "  Back" << endl  << endl;
+    }
+}
 
 void PaintScreen::paintOptionsMenu(int life, int enemies, int money, bool saveOk, bool shopOk, int arrow)
 {
@@ -449,7 +364,7 @@ void PaintScreen::paintOptionsMenu(int life, int enemies, int money, bool saveOk
 
 }
 
-void PaintScreen::paintPlayerMenu(int arrow, int health, int maxHealth, char stat, int money, int exp, string attackItem, string defenceItem)
+void PaintScreen::paintPlayerMenu(int arrow, int health, int maxHealth, char stat, int money, int exp, int level, string attackItem, string defenceItem)
 {
 
     //clear screen:
@@ -459,6 +374,7 @@ void PaintScreen::paintPlayerMenu(int arrow, int health, int maxHealth, char sta
     printf("Status: %c\n", stat);
     printf("Money: %d\n", money);
     printf("Exp. points: %d\n", exp);
+    printf("Level: %d\n", level);
     cout << "Equipped wearpon: " << attackItem << endl;
     cout <<"Equipped shield: " << defenceItem << endl;
 
@@ -502,7 +418,6 @@ void PaintScreen::paintPlayerMenu(int arrow, int health, int maxHealth, char sta
 
 }
 
-
 void PaintScreen::paintPlayerStats(Character &cPlayer)
 {
     //Paint out the lives:
@@ -512,6 +427,91 @@ void PaintScreen::paintPlayerStats(Character &cPlayer)
     }
     printf("\t Money: %d\n", cPlayer.getMoney());
 
+}
+
+void PaintScreen::PaintSaveMenu(string name1, string name2, string name3, int arrow)
+{
+    cout << "Select the file to save your progress:\n\n";
+
+    switch(arrow)
+    {
+        case 0:
+            cout << "> " << name1 << endl;
+            cout << "  " << name2 << endl;
+            cout << "  " << name3 << endl << endl;
+            cout << "  " << "Back\n";
+            break;
+
+        case 1:
+            cout << "  " << name1 << endl;
+            cout << "> " << name2 << endl;
+            cout << "  " << name3 << endl << endl;
+            cout << "  " << "Back\n";
+            break;
+
+        case 2:
+            cout << "  " << name1 << endl;
+            cout << "  " << name2 << endl;
+            cout << "> " << name3 << endl << endl;
+            cout << "  " << "Back\n";
+            break;
+
+        case 3:
+            cout << "  " << name1 << endl;
+            cout << "  " << name2 << endl;
+            cout << "  " << name3 << endl << endl;
+            cout << "> " << "Back\n";
+            break;
+
+    }
+}
+
+void PaintScreen::paintShopItemDetails(string name, string desc, int pieceOf, int attack, int defence, int heal, int buyPrice, int sellPrince, int selectArrow)
+{
+    cout << name << endl;
+    cout << desc << endl;
+    cout << pieceOf << " Piece available for sale" << endl;
+    cout << "attack: " << attack << endl;
+    cout << "defence: " << defence << endl;
+    cout << "heal: " << heal << endl;
+    cout << "buy price: " << buyPrice << endl;
+    cout << "sell price: " << sellPrince << endl;
+
+    switch(selectArrow)
+    {
+        case 0:
+        printf("> Buy\n");
+        printf("  Back\n\n");
+        break;
+
+        case 1:
+        printf("  Buy\n");
+        printf("> Back\n\n");
+        break;
+    }
+
+}
+
+void PaintScreen::paintMainMenu_newGame()
+{
+    printf("   > New Game      Options\n");
+    printf("     Load Game     Quit\n");
+
+}
+void PaintScreen::paintMainMenu_options()
+{
+    printf("     New Game    > Options\n");
+    printf("     Load Game     Quit\n");
+}
+void PaintScreen::paintMainMenu_loadGame()
+{
+    printf("     New Game      Options\n");
+    printf("   > Load Game     Quit\n");
+}
+void PaintScreen::paintMainMenu_quit()
+{
+    printf("     New Game      Options\n");
+    printf("     Load Game   > Quit\n");
 }
 
 void PaintScreen::paintWelcomeAtShop()

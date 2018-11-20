@@ -14,6 +14,7 @@ void Menu::collectData(Character &cPlayer)
     _maxHealth = cPlayer.getMaxhealth();
     _stat = cPlayer.getStat();
     _exp = cPlayer.getExp();
+    _level = cPlayer.getLevel();
     _money = cPlayer.getMoney();
     _equippedWearpon = cPlayer.getEquippedWearpon();
     _equippedShield = cPlayer.getEquippedShield();
@@ -49,6 +50,10 @@ char Menu::getStat()
 int Menu::getExp()
 {
     return _exp;
+}
+int Menu::getLevel()
+{
+    return _level;
 }
 int Menu::getMoney()
 {
@@ -128,7 +133,7 @@ bool Menu::openMenu(Character &cPlayer, PaintScreen &cPaint)
 
     while(1)
     {
-        cPaint.paintPlayerMenu(getArrow(), getHealth(), getMaxHealth(), getStat(), getMoney(), getExp(), _equippedWearpon.getName(), _equippedShield.getName());
+        cPaint.paintPlayerMenu(getArrow(), getHealth(), getMaxHealth(), getStat(), getMoney(), getExp(), getLevel(), _equippedWearpon.getName(), _equippedShield.getName());
 
         //wait for the user input:
         setOptionsKey(getch());
@@ -240,7 +245,7 @@ bool Menu::watchItemDetails(PaintScreen &cPaint, int itemArrow, list<Item> &myIt
                 }
                 if(cPlayer.getEquippedWearpon().getName() != (*lit).getName())
                 {
-                    //if it's not equipped, check if it's a defence item:
+                    //if it's not equipped, check if it's an attack item:
                     if((*lit).getAttack() > 0)
                     {
                         cPlayer.setEquippedWearpon(*lit);

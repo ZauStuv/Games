@@ -41,53 +41,69 @@ LoadSaveGame::LoadSaveGame()
                     _saveStates[0].setStat(atoi(input.c_str()));
                     break;
                 case 6:
-                    _saveStates[0].setNumOfEnemies(atoi(input.c_str()));
+                    _saveStates[0].setMaxNumOfEnemies(atoi(input.c_str()));
                     break;
                 case 7:
-                    _saveStates[0].setSaveDuringGame(atoi(input.c_str()));
+                    _saveStates[0].setCurrNumOfEnemies(atoi(input.c_str()));
                     break;
                 case 8:
-                    _saveStates[0].setShopAvailable(atoi(input.c_str()));
+                    _saveStates[0].setSaveDuringGame(atoi(input.c_str()));
                     break;
                 case 9:
-                    _saveStates[0].setMoney(atoi(input.c_str()));
+                    _saveStates[0].setShopAvailable(atoi(input.c_str()));
                     break;
                 case 10:
-                    _saveStates[0].setShopCoordinate1(atoi(input.c_str()));
+                    _saveStates[0].setMoney(atoi(input.c_str()));
                     break;
                 case 11:
-                    _saveStates[0].setShopCoordinate2(atoi(input.c_str()));
+                    _saveStates[0].setShopCoordinate1(atoi(input.c_str()));
                     break;
                 case 12:
-                    _saveStates[0].setSavePointCoordinate1(atoi(input.c_str()));
+                    _saveStates[0].setShopCoordinate2(atoi(input.c_str()));
                     break;
                 case 13:
-                    _saveStates[0].setSavePointCoordinate2(atoi(input.c_str()));
+                    _saveStates[0].setSavePointCoordinate1(atoi(input.c_str()));
                     break;
                 case 14:
-                    _saveStates[0].setPlayerCoordinate1(atoi(input.c_str()));
+                    _saveStates[0].setSavePointCoordinate2(atoi(input.c_str()));
                     break;
                 case 15:
-                    _saveStates[0].setPlayerCoordinate2(atoi(input.c_str()));
+                    _saveStates[0].setPlayerCoordinate1(atoi(input.c_str()));
                     break;
                 case 16:
-                    _saveStates[0].setLadderCoordinate1(atoi(input.c_str()));
+                    _saveStates[0].setPlayerCoordinate2(atoi(input.c_str()));
                     break;
                 case 17:
+                    _saveStates[0].setLadderCoordinate1(atoi(input.c_str()));
+                    break;
+                case 18:
                     _saveStates[0].setLadderCoordinate2(atoi(input.c_str()));
                     break;
-                //everything above 17 is player item. Player items have a finite number, with the same attributes, only their name and number should be saves/loaded:
+                case 19:
+                    _saveStates[0].setAttackItem(input);
+                    break;
+                case 20:
+                    _saveStates[0].setDefenceItem(input);
+                    break;
+                //everything above 20 is player item. Player items have a finite number, with the same attributes, only their name and number should be saves/loaded:
                 default:
-                    if((rowNum % 3))
+                    if((rowNum % 5))
                     {
-                        //there should be an empty row between each item+itemnumber
-                        if(!((rowNum-1) % 3))
+                        if(!((rowNum-1) % 5))
                             _saveStates[0].setItemName(input);
-                        else if(!((rowNum+1) % 3))
+                        else if(!((rowNum-2) % 5))
                             _saveStates[0].setItemCount(atoi(input.c_str()));
+                        else if(!((rowNum-3) % 5))
+                            _saveStates[0].setItemAttack(atoi(input.c_str()));
+                        else
+                            _saveStates[0].setItemDefence(atoi(input.c_str()));
+
                     }
                     else
+                    {
+                        //there should be an empty row between each item+itemnumber
                         _saveStates[0].updateItem();
+                    }
                     break;
             }
             rowNum++;
@@ -129,53 +145,69 @@ LoadSaveGame::LoadSaveGame()
                     _saveStates[1].setStat(atoi(input.c_str()));
                     break;
                 case 6:
-                    _saveStates[1].setNumOfEnemies(atoi(input.c_str()));
+                    _saveStates[1].setMaxNumOfEnemies(atoi(input.c_str()));
                     break;
                 case 7:
-                    _saveStates[1].setSaveDuringGame(atoi(input.c_str()));
+                    _saveStates[1].setCurrNumOfEnemies(atoi(input.c_str()));
                     break;
                 case 8:
-                    _saveStates[1].setShopAvailable(atoi(input.c_str()));
+                    _saveStates[1].setSaveDuringGame(atoi(input.c_str()));
                     break;
                 case 9:
-                    _saveStates[1].setMoney(atoi(input.c_str()));
+                    _saveStates[1].setShopAvailable(atoi(input.c_str()));
                     break;
                 case 10:
-                    _saveStates[1].setShopCoordinate1(atoi(input.c_str()));
+                    _saveStates[1].setMoney(atoi(input.c_str()));
                     break;
                 case 11:
-                    _saveStates[1].setShopCoordinate2(atoi(input.c_str()));
+                    _saveStates[1].setShopCoordinate1(atoi(input.c_str()));
                     break;
                 case 12:
-                    _saveStates[1].setSavePointCoordinate1(atoi(input.c_str()));
+                    _saveStates[1].setShopCoordinate2(atoi(input.c_str()));
                     break;
                 case 13:
-                    _saveStates[1].setSavePointCoordinate2(atoi(input.c_str()));
+                    _saveStates[1].setSavePointCoordinate1(atoi(input.c_str()));
                     break;
                 case 14:
-                    _saveStates[1].setPlayerCoordinate1(atoi(input.c_str()));
+                    _saveStates[1].setSavePointCoordinate2(atoi(input.c_str()));
                     break;
                 case 15:
-                    _saveStates[1].setPlayerCoordinate2(atoi(input.c_str()));
+                    _saveStates[1].setPlayerCoordinate1(atoi(input.c_str()));
                     break;
                 case 16:
-                    _saveStates[1].setLadderCoordinate1(atoi(input.c_str()));
+                    _saveStates[1].setPlayerCoordinate2(atoi(input.c_str()));
                     break;
                 case 17:
+                    _saveStates[1].setLadderCoordinate1(atoi(input.c_str()));
+                    break;
+                case 18:
                     _saveStates[1].setLadderCoordinate2(atoi(input.c_str()));
                     break;
-                //everything above 17 is player item. Player items have a finite number, with the same attributes, only their name and number should be saves/loaded:
+                case 19:
+                    _saveStates[1].setAttackItem(input);
+                    break;
+                case 20:
+                    _saveStates[1].setDefenceItem(input);
+                    break;
+                //everything above 20 is player item. Player items have a finite number, with the same attributes, only their name and number should be saves/loaded:
                 default:
-                    if((rowNum % 3))
+                    if((rowNum % 5))
                     {
-                        //there should be an empty row between each item+itemnumber
-                        if(!((rowNum-1) % 3))
+                        if(!((rowNum-1) % 5))
                             _saveStates[1].setItemName(input);
-                        else if(!((rowNum+1) % 3))
+                        else if(!((rowNum-2) % 5))
                             _saveStates[1].setItemCount(atoi(input.c_str()));
+                        else if(!((rowNum-3) % 5))
+                            _saveStates[1].setItemAttack(atoi(input.c_str()));
+                        else
+                            _saveStates[1].setItemDefence(atoi(input.c_str()));
+
                     }
                     else
+                    {
+                        //there should be an empty row between each item+itemnumber
                         _saveStates[1].updateItem();
+                    }
                     break;
             }
             rowNum++;
@@ -216,53 +248,69 @@ LoadSaveGame::LoadSaveGame()
                     _saveStates[2].setStat(atoi(input.c_str()));
                     break;
                 case 6:
-                    _saveStates[2].setNumOfEnemies(atoi(input.c_str()));
+                    _saveStates[2].setMaxNumOfEnemies(atoi(input.c_str()));
                     break;
                 case 7:
-                    _saveStates[2].setSaveDuringGame(atoi(input.c_str()));
+                    _saveStates[2].setCurrNumOfEnemies(atoi(input.c_str()));
                     break;
                 case 8:
-                    _saveStates[2].setShopAvailable(atoi(input.c_str()));
+                    _saveStates[2].setSaveDuringGame(atoi(input.c_str()));
                     break;
                 case 9:
-                    _saveStates[2].setMoney(atoi(input.c_str()));
+                    _saveStates[2].setShopAvailable(atoi(input.c_str()));
                     break;
                 case 10:
-                    _saveStates[2].setShopCoordinate1(atoi(input.c_str()));
+                    _saveStates[2].setMoney(atoi(input.c_str()));
                     break;
                 case 11:
-                    _saveStates[2].setShopCoordinate2(atoi(input.c_str()));
+                    _saveStates[2].setShopCoordinate1(atoi(input.c_str()));
                     break;
                 case 12:
-                    _saveStates[2].setSavePointCoordinate1(atoi(input.c_str()));
+                    _saveStates[2].setShopCoordinate2(atoi(input.c_str()));
                     break;
                 case 13:
-                    _saveStates[2].setSavePointCoordinate2(atoi(input.c_str()));
+                    _saveStates[2].setSavePointCoordinate1(atoi(input.c_str()));
                     break;
                 case 14:
-                    _saveStates[2].setPlayerCoordinate1(atoi(input.c_str()));
+                    _saveStates[2].setSavePointCoordinate2(atoi(input.c_str()));
                     break;
                 case 15:
-                    _saveStates[2].setPlayerCoordinate2(atoi(input.c_str()));
+                    _saveStates[2].setPlayerCoordinate1(atoi(input.c_str()));
                     break;
                 case 16:
-                    _saveStates[2].setLadderCoordinate1(atoi(input.c_str()));
+                    _saveStates[2].setPlayerCoordinate2(atoi(input.c_str()));
                     break;
                 case 17:
+                    _saveStates[2].setLadderCoordinate1(atoi(input.c_str()));
+                    break;
+                case 18:
                     _saveStates[2].setLadderCoordinate2(atoi(input.c_str()));
                     break;
-                //everything above 17 is player item. Player items have a finite number, with the same attributes, only their name and number should be saves/loaded:
+                case 19:
+                    _saveStates[2].setAttackItem(input);
+                    break;
+                case 20:
+                    _saveStates[2].setDefenceItem(input);
+                    break;
+                //everything above 20 is player item. Player items have a finite number, with the same attributes, only their name and number should be saves/loaded:
                 default:
-                    if((rowNum % 3))
+                    if((rowNum % 5))
                     {
-                        //there should be an empty row between each item+itemnumber
-                        if(!((rowNum-1) % 3))
-                            _saveStates[0].setItemName(input);
-                        else if(!((rowNum+1) % 3))
+                        if(!((rowNum-1) % 5))
+                            _saveStates[2].setItemName(input);
+                        else if(!((rowNum-2) % 5))
                             _saveStates[2].setItemCount(atoi(input.c_str()));
+                        else if(!((rowNum-3) % 5))
+                            _saveStates[2].setItemAttack(atoi(input.c_str()));
+                        else
+                            _saveStates[2].setItemDefence(atoi(input.c_str()));
+
                     }
                     else
+                    {
+                        //there should be an empty row between each item+itemnumber
                         _saveStates[2].updateItem();
+                    }
                     break;
             }
             rowNum++;
@@ -271,7 +319,7 @@ LoadSaveGame::LoadSaveGame()
     _loadSaveFile.close();
 }
 
-void LoadSaveGame::openLoadMenu(PaintScreen &cPaint, SaveState &state)
+bool LoadSaveGame::openLoadMenu(PaintScreen &cPaint, SaveState &state)
 {
     while(true)
     {
@@ -298,26 +346,28 @@ void LoadSaveGame::openLoadMenu(PaintScreen &cPaint, SaveState &state)
         else if(getLoadMenuKey() == '\r')
         {
             if(getLoadMenuArrow() == 3)
-                return;
+                return false;
             else
             {
                 if(getLoadMenuArrow() == 0)
                 {
                     //retrieve the saved game datas from the 1st savefile:
                     state = _saveStates[0];
+                    return true;
                 }
                 else if(getLoadMenuArrow() == 1)
                 {
                     //retrieve the saved game datas from the 2nd savefile:
                     state = _saveStates[1];
-
+                    return true;
                 }
                 else if(getLoadMenuArrow() == 2)
                 {
                     //retrieve the saved game datas from the 2nd savefile:
                     state = _saveStates[2];
+                    return true;
                 }
-                return;
+                return false;
             }
         }
     }
@@ -325,7 +375,7 @@ void LoadSaveGame::openLoadMenu(PaintScreen &cPaint, SaveState &state)
 
 
 
-void LoadSaveGame::openSaveMenu(PaintScreen &cPaint, int levelNum, int numOfEnemies, bool saveDuringGame, bool shopAvailable, int currHealth, int maxHealth, int exp, int money, char stat, int shopXcoordinate, int shopYcoordinate, int saveXcoordinate, int saveYcoordinate, int playerXcoordinate, int playerYcoordinate, int ladderCoordinates[2], list<Item> &playerItems)
+void LoadSaveGame::openSaveMenu(PaintScreen &cPaint, int levelNum, int maxNumOfEnemies, int currNumOfEnemies, bool saveDuringGame, bool shopAvailable, int currHealth, int maxHealth, int exp, int money, char stat, int shopXcoordinate, int shopYcoordinate, int saveXcoordinate, int saveYcoordinate, int playerXcoordinate, int playerYcoordinate, int ladderCoordinates[2], string equippedDefenceItem, string equippedAttackItem, list<Item> &playerItems)
 {
     while(true)
     {
@@ -360,17 +410,17 @@ void LoadSaveGame::openSaveMenu(PaintScreen &cPaint, int levelNum, int numOfEnem
                 if(getSaveMenuArrow() == 0)
                 {
                     //save the game datas:
-                    saveGameState(getSaveMenuArrow(), cPaint, levelNum, numOfEnemies, saveDuringGame, shopAvailable, currHealth, maxHealth, exp, money, stat, shopXcoordinate, shopYcoordinate, saveXcoordinate, saveYcoordinate, playerXcoordinate, playerYcoordinate, ladderCoordinates, playerItems);
+                    saveGameState(getSaveMenuArrow(), cPaint, levelNum, maxNumOfEnemies, currNumOfEnemies, saveDuringGame, shopAvailable, currHealth, maxHealth, exp, money, stat, shopXcoordinate, shopYcoordinate, saveXcoordinate, saveYcoordinate, playerXcoordinate, playerYcoordinate, ladderCoordinates, equippedDefenceItem, equippedAttackItem, playerItems);
                 }
                 else if(getSaveMenuArrow() == 1)
                 {
                     //save the game datas:
-                    saveGameState(getSaveMenuArrow(), cPaint, levelNum, numOfEnemies, saveDuringGame, shopAvailable, currHealth, maxHealth, exp, money, stat, shopXcoordinate, shopYcoordinate, saveXcoordinate, saveYcoordinate, playerXcoordinate, playerYcoordinate, ladderCoordinates, playerItems);
+                    saveGameState(getSaveMenuArrow(), cPaint, levelNum, maxNumOfEnemies, currNumOfEnemies, saveDuringGame, shopAvailable, currHealth, maxHealth, exp, money, stat, shopXcoordinate, shopYcoordinate, saveXcoordinate, saveYcoordinate, playerXcoordinate, playerYcoordinate, ladderCoordinates, equippedDefenceItem, equippedAttackItem, playerItems);
                 }
                 else if(getSaveMenuArrow() == 2)
                 {
                     //save the game datas:
-                    saveGameState(getSaveMenuArrow(), cPaint, levelNum, numOfEnemies, saveDuringGame, shopAvailable, currHealth, maxHealth, exp, money, stat, shopXcoordinate, shopYcoordinate, saveXcoordinate, saveYcoordinate, playerXcoordinate, playerYcoordinate, ladderCoordinates, playerItems);
+                    saveGameState(getSaveMenuArrow(), cPaint, levelNum, maxNumOfEnemies, currNumOfEnemies, saveDuringGame, shopAvailable, currHealth, maxHealth, exp, money, stat, shopXcoordinate, shopYcoordinate, saveXcoordinate, saveYcoordinate, playerXcoordinate, playerYcoordinate, ladderCoordinates, equippedDefenceItem, equippedAttackItem, playerItems);
                 }
                 return;
             }
@@ -382,13 +432,7 @@ void LoadSaveGame::openSaveMenu(PaintScreen &cPaint, int levelNum, int numOfEnem
 
 }
 
-
-void LoadSaveGame::saveGame()
-{
-    _saveGame.open("savegame.txt");
-}
-
-void LoadSaveGame::saveGameState(int stateNum, PaintScreen &cPaint, int levelNum, int numOfEnemies, bool saveDuringGame, bool shopAvailable, int currHealth, int maxHealth, int exp, int money, char stat, int shopXcoordinate, int shopYcoordinate, int saveXcoordinate, int saveYcoordinate, int playerXcoordinate, int playerYcoordinate, int ladderCoordinates[2], list<Item> &playerItems)
+void LoadSaveGame::saveGameState(int stateNum, PaintScreen &cPaint, int levelNum, int maxNumOfEnemies, int currNumOfEnemies, bool saveDuringGame, bool shopAvailable, int currHealth, int maxHealth, int exp, int money, char stat, int shopXcoordinate, int shopYcoordinate, int saveXcoordinate, int saveYcoordinate, int playerXcoordinate, int playerYcoordinate, int ladderCoordinates[2], string equippedDefenceItem, string equippedAttackItem, list<Item> &playerItems)
 {
     list<Item>::iterator lit;
     //concatenate "stateNum" to string, to create the savefile name:
@@ -419,7 +463,9 @@ void LoadSaveGame::saveGameState(int stateNum, PaintScreen &cPaint, int levelNum
     _saveGame << endl;
     _saveGame << to_string(stat);
     _saveGame << endl;
-    _saveGame << to_string(numOfEnemies);
+    _saveGame << to_string(maxNumOfEnemies);
+    _saveGame << endl;
+    _saveGame << to_string(currNumOfEnemies);
     _saveGame << endl;
     _saveGame << to_string(saveDuringGame);
     _saveGame << endl;
@@ -443,7 +489,11 @@ void LoadSaveGame::saveGameState(int stateNum, PaintScreen &cPaint, int levelNum
     _saveGame << endl;
     _saveGame << to_string(ladderCoordinates[1]);
     _saveGame << endl;
+    _saveGame << equippedAttackItem;
     _saveGame << endl;
+    _saveGame << equippedDefenceItem;
+    _saveGame << endl;
+
 
 
     //add the player items at the end:
@@ -452,6 +502,10 @@ void LoadSaveGame::saveGameState(int stateNum, PaintScreen &cPaint, int levelNum
         _saveGame << (*lit).getName();
         _saveGame << endl;
         _saveGame << (*lit).getPieceOf();
+        _saveGame << endl;
+        _saveGame << (*lit).getAttack();
+        _saveGame << endl;
+        _saveGame << (*lit).getDefence();
         _saveGame << endl;
         _saveGame << endl;
     }

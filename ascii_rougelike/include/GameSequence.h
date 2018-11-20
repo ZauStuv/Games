@@ -46,19 +46,36 @@ class GameSequence
         //Holds the initial settings for the game, which can be changed in the options menu:
         GlobalOptions _cOptions;
 
-        //Does the loading, and later during the game, the saving job in the game:
-        //LoadSaveGame _cGameLoaderSaver;
-
         //Holds the PaintScreen object, which will be used through the game:
         PaintScreen _cPaint;
 
         //Holds the intformation about the selected menu point of the main menu.
         char _mainMenuKey;
 
+        //Holds the current position of the main menu selector arrow
         bool _mainMenuArrow[2][2];
 
-        void updateArrow();
+
+        /** @brief: Executes the currently selected menu point.
+        *
+        *   Checks the value of all <_mainMenuArrow[][]> array elements one after another,
+        *   and executes the one which has "true" value stored in itself.
+        *
+        *   @param: none
+        *   @return: void
+        */
         bool enterPressed();
+
+        /** @brief: Updates the menu point selector arrow.
+        *
+        *   Checks the previously pressed key information in
+        *   <_mainMenuKey>, and updates the position of the selector
+        *   arrow accordingly.
+        *
+        *   @param: none
+        *   @return: void
+        */
+        void updateArrow();
 };
 
 #endif // GAMESEQUENCE_H

@@ -34,29 +34,6 @@ void Shop::addItem(Item itemName)
     _shopItems.back().setPieceOf(1);
 }
 
-void Shop::removeItem(Item itemName, int &itemArrow)
-{
-    list<Item>::iterator lit;
-
-    for(lit = _shopItems.begin(); lit != _shopItems.end(); lit++)
-    {
-        if( (*lit).getName() == itemName.getName())
-        {
-            (*lit).setPieceOf((*lit).getPieceOf()-1);
-            break;
-        }
-    }
-    if((*lit).getPieceOf() == 0)
-    {
-        if(lit != _shopItems.begin())
-            itemArrow--;
-        _shopItems.erase(lit);
-
-        return;
-    }
-    return;
-}
-
 void Shop::enterShop(Character &cPlayer, PaintScreen &cPaint)
 {
     list<Item>::iterator lit;
@@ -111,6 +88,29 @@ void Shop::enterShop(Character &cPlayer, PaintScreen &cPaint)
 
         itemArrowCompare = 0;
     }
+}
+
+void Shop::removeItem(Item itemName, int &itemArrow)
+{
+    list<Item>::iterator lit;
+
+    for(lit = _shopItems.begin(); lit != _shopItems.end(); lit++)
+    {
+        if( (*lit).getName() == itemName.getName())
+        {
+            (*lit).setPieceOf((*lit).getPieceOf()-1);
+            break;
+        }
+    }
+    if((*lit).getPieceOf() == 0)
+    {
+        if(lit != _shopItems.begin())
+            itemArrow--;
+        _shopItems.erase(lit);
+
+        return;
+    }
+    return;
 }
 
 

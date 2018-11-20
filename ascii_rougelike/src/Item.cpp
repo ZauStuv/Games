@@ -83,13 +83,3 @@ void Item::setSellPrice(int sellPrice)
 {
     _sellPrice = sellPrice;
 }
-//an unified function for initializing an item:
-void Item::setEverything(string name, int attack, int defence, int heal, int shopPrice, int sellPrice)
-{
-    _name = name;
-    _attack = attack;
-    _defence = defence;
-    _heal = heal;
-    _shopPrice = shopPrice;
-    _sellPrice = sellPrice;
-}

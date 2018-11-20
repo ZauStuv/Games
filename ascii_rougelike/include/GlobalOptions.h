@@ -8,6 +8,15 @@ class GlobalOptions
 {
     public:
         GlobalOptions();
+
+        /** @brief: Prints out the options menu.
+        *
+        *   Clears the screen and prints out the options menu to the display, and the arrow where it
+        *   is pointing to.
+        *
+        *   @param: PaintScreen cPaint, GlobalOptions &cOptions
+        *   @return: void
+        */
         void optionsMenu(PaintScreen cPaint, GlobalOptions &cOptions);
 
         //setters:
@@ -29,13 +38,27 @@ class GlobalOptions
 
         int _life;
         int _num_of_enemies;
-        int _starting_budget;
-        bool _shop_available;
         bool _save_during_game;
+        bool _shop_available;
+        int _starting_budget;
+
 
         int _optionsArrow;
         char _optionsKey;
 
+        /** @brief: Changes the adjustable parameters.
+        *
+        *   Function waits until the user hits a button, then evaluates it.
+        *   Case 'w', subtracts one from the <_optionsArrow> parameter.
+        *   Case 's' adds one to it.
+        *   Case 'a' subtracts 1 from the value of <_life>, <__num_of_enemies>, <_starting_budget>, <_shop_available> or <_save_during_game>,
+        *   depending on the value of <_optionsArrow>
+        *   Case 'd' adds 1 to the value of <_life>, <__num_of_enemies>, <_starting_budget>, <_shop_available> or <_save_during_game>,
+        *   depending on the value of <_optionsArrow>
+        *
+        *   @param: cOptions: is needed because all the adjustable variables (including the arrow) are stored in this object.
+        *   @return: void
+        */
         bool selectOption(GlobalOptions &cOptions);
         //private getters and setters:
         void setOptionsArrow(int optionsArrow);

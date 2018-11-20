@@ -18,7 +18,7 @@ void Level::getRandomCoordinateForMap(int &myY, int &myX, char levelMap[MAX_LEVE
         }
     }
 }
-void Level::getRandomCoordinateForMapEnemies(int &myY, int &myX, char levelMap[MAX_LEVEL_DIMENSION][MAX_LEVEL_DIMENSION])
+void Level::getRandomCoordinateForMapEnemiesAndPlayer(int &myY, int &myX, char levelMap[MAX_LEVEL_DIMENSION][MAX_LEVEL_DIMENSION])
 {
     while(1)
     {
@@ -32,20 +32,7 @@ void Level::getRandomCoordinateForMapEnemies(int &myY, int &myX, char levelMap[M
         }
     }
 }
-void Level::resetRandomCoordinates(char levelMap[MAX_LEVEL_DIMENSION][MAX_LEVEL_DIMENSION])
-{
-    for(int y = 0; y < MAX_LEVEL_DIMENSION; y++)
-    {
-        for(int x = 0; x < MAX_LEVEL_DIMENSION; x++)
-        {
-            if(levelMap[y][x] == '_')
-            {
-                levelMap[y][x] = '.';
-                break;
-            }
-        }
-    }
-}
+
 
 void Level::newGame(LoadSaveGame &cGameLoaderSaver, GlobalOptions &cOptions)
 {
@@ -55,17 +42,6 @@ void Level::newGame(LoadSaveGame &cGameLoaderSaver, GlobalOptions &cOptions)
     Character cPlayer;
     cPlayer.setMaxhealth(cOptions.getLife());
     cPlayer.setDefaults(cOptions.getStartingBudget());
-
-    /*TEST
-    Item myItem = _player.getPlayerItems();
-    cout << myItem.getName() << endl;
-    cout << myItem.getAttack() << endl;
-    cout << myItem.getDefence() << endl;
-    cout << myItem.getHeal() << endl;
-    cout << myItem.getPrice() << endl;
-    system("pause");
-    */
-
 
     //load level, and continue until you play the last level, or quit the game, or die -> return loadLevel false:
     while(true)
@@ -92,7 +68,8 @@ void Level::loadGame(LoadSaveGame &cGameLoaderSaver, GlobalOptions &cOptions)
 {
     SaveState cState;
 
-    cGameLoaderSaver.openLoadMenu(_cPaint, cState);
+    if(cGameLoaderSaver.openLoadMenu(_cPaint, cState) == false)
+        return;
 
     //before loading the settings, check if the save is valid. If not, return:
     if(cState.getStateName() == "Empty")
@@ -100,7 +77,7 @@ void Level::loadGame(LoadSaveGame &cGameLoaderSaver, GlobalOptions &cOptions)
 
     //bacause in load mode, overwrite the global options:
     cOptions.setLife(cState.getMaxLife());
-    cOptions.setNumOfEnemies(cState.getNumOfEnemies());
+    cOptions.setNumOfEnemies(cState.getMaxNumOfEnemies());
     cOptions.setSaveDuringGame(cState.getSaveDuringGame());
     cOptions.setShopAvailable(cState.getSaveDuringGame());
     cOptions.setStartingBudget(cState.getMoney());
@@ -114,6 +91,10 @@ void Level::loadGame(LoadSaveGame &cGameLoaderSaver, GlobalOptions &cOptions)
     cPlayer.setCurrHealth(cState.getCurrLife());
     cPlayer.setStat(cState.getStat());
     cPlayer.setAllPlayerItems(cState.getItems());
+    cPlayer.initExp(cState.getExp());
+
+    cPlayer.setEquippedWearpon(cState.getAttackItem());
+    cPlayer.setEquippedShield(cState.getDefenceItem());
 
     //load level, and continue until you play the last level, or quit the game, or die -> return loadLevel false:
     while(true)
@@ -122,6 +103,15 @@ void Level::loadGame(LoadSaveGame &cGameLoaderSaver, GlobalOptions &cOptions)
             break;
 
         levelNum++;
+
+        //after finishing level9, congrats to the player, then return:
+        if(levelNum > 9)
+        {
+            _cPaint.clearScreen();
+            _cPaint.messageCongrats();
+            system("pause");
+            return;
+        }
     }
 
 }
@@ -174,8 +164,7 @@ bool Level::loadLevel(int level, LoadSaveGame &cGameLoaderSaver, GlobalOptions &
     int numOfEnemies = 0;
     while(cOptions.getNumOfEnemies() > numOfEnemies)
     {
-        //all enemies will have 1 health, 1 attack and 1 defence:
-        cEnemies.push_back(Enemy((rand() % 9)+1, (rand() % 5)+1, (rand() % 5)+1));
+        cEnemies.push_back(Enemy((rand() % 9)+1, (rand() % 5)+1));
         numOfEnemies++;
     }
 
@@ -202,15 +191,6 @@ bool Level::loadLevel(int level, LoadSaveGame &cGameLoaderSaver, GlobalOptions &
         //wait for the user to give an input, then evaluate it:
         gameQuit = playerMove(cPlayer, playerMenu, cShop, cEnemies, cGameLoaderSaver, levelMap, level, cOptions, ladderCoordinates);
 
-
-        //move enemies: if enemy has killed the player(function returns true), return false and quit the game:
-        if(enemyMove(cEnemies, cPlayer, levelMap))
-            return false;
-
-        //system("pause");
-
-        //TEST
-        //gameQuit = true;
         if(gameQuit == 'q')
         {
             _levelLoader.close();
@@ -221,6 +201,11 @@ bool Level::loadLevel(int level, LoadSaveGame &cGameLoaderSaver, GlobalOptions &
             _levelLoader.close();
             return true;
         }
+
+        //move enemies: if enemy has killed the player(function returns true), return false and quit the game:
+        if(enemyMove(cEnemies, cPlayer, levelMap))
+            return false;
+
 
         if(cPlayer.getStat() == 'p')
         {
@@ -295,11 +280,23 @@ bool Level::loadLevel(int level, LoadSaveGame &cGameLoaderSaver, GlobalOptions c
     //create the enemies:
     list<Enemy> cEnemies;
     int numOfEnemies = 0;
-    while(cOptions.getNumOfEnemies() > numOfEnemies)
+
+    //load back on the currently saved level only as many enemies as many have remained before saving:
+    if(cState.getLevelNumber() == level)
     {
-        //all enemies will have 1 health, 1 attack and 1 defence:
-        cEnemies.push_back(Enemy((rand() % 9)+1, (rand() % 5)+1, (rand() % 5)+1));
-        numOfEnemies++;
+        while(cState.getCurrNumOfEnemies() > numOfEnemies)
+        {
+            cEnemies.push_back(Enemy((rand() % 9)+1, (rand() % 5)+1));
+            numOfEnemies++;
+        }
+    }
+    else
+    {
+        while(cOptions.getNumOfEnemies() > numOfEnemies)
+        {
+            cEnemies.push_back(Enemy((rand() % 9)+1, (rand() % 5)+1));
+            numOfEnemies++;
+        }
     }
 
     //create the shop, if available:
@@ -310,22 +307,24 @@ bool Level::loadLevel(int level, LoadSaveGame &cGameLoaderSaver, GlobalOptions c
     randomizer(cOptions, cShop, cGameLoaderSaver, cPlayer, cEnemies, levelMap, ladderCoordinates);
 
 
-    //overwrite the shop and savestate coordinates:
-    levelMap[*(cShop.getCoordinates())][*(cShop.getCoordinates()+1)] = '.';
-    cShop.setCoordinates(cState.getShopCoordinate1(), cState.getShopCoordinate2());
-    levelMap[*(cShop.getCoordinates())][*(cShop.getCoordinates()+1)] = '_';
-    levelMap[*(cGameLoaderSaver.getCoordinates())][*(cGameLoaderSaver.getCoordinates()+1)] = '.';
-    cGameLoaderSaver.setCoordinates(cState.getSavePointCoordinate1(), cState.getSavePointCoordinate2());
-    levelMap[*(cGameLoaderSaver.getCoordinates())][*(cGameLoaderSaver.getCoordinates()+1)] = '_';
-    levelMap[*(cPlayer.getCoordinates())][*(cPlayer.getCoordinates()+1)] = '.';
-    cPlayer.setCoordinates(cState.getPlayerCoordinate1(), cState.getPlayerCoordinate2());
-    levelMap[*(cPlayer.getCoordinates())][*(cPlayer.getCoordinates()+1)] = '_';
+    //overwrite the shop and savestate coordinates for the first loaded level:
+    if(cState.getLevelNumber() == level)
+    {
+        levelMap[*(cShop.getCoordinates())][*(cShop.getCoordinates()+1)] = '.';
+        cShop.setCoordinates(cState.getShopCoordinate1(), cState.getShopCoordinate2());
+        levelMap[*(cShop.getCoordinates())][*(cShop.getCoordinates()+1)] = '_';
+        levelMap[*(cGameLoaderSaver.getCoordinates())][*(cGameLoaderSaver.getCoordinates()+1)] = '.';
+        cGameLoaderSaver.setCoordinates(cState.getSavePointCoordinate1(), cState.getSavePointCoordinate2());
+        levelMap[*(cGameLoaderSaver.getCoordinates())][*(cGameLoaderSaver.getCoordinates()+1)] = '_';
+        levelMap[*(cPlayer.getCoordinates())][*(cPlayer.getCoordinates()+1)] = '.';
+        cPlayer.setCoordinates(cState.getPlayerCoordinate1(), cState.getPlayerCoordinate2());
+        levelMap[*(cPlayer.getCoordinates())][*(cPlayer.getCoordinates()+1)] = '_';
 
-    levelMap[ladderCoordinates[0]][ladderCoordinates[1]] = '.';
-    ladderCoordinates[0] = cState.getLadderCoordinate(0);
-    ladderCoordinates[1] = cState.getLadderCoordinate(1);
-    levelMap[ladderCoordinates[0]][ladderCoordinates[1]] = '_';
-
+        levelMap[ladderCoordinates[0]][ladderCoordinates[1]] = '.';
+        ladderCoordinates[0] = cState.getLadderCoordinate(0);
+        ladderCoordinates[1] = cState.getLadderCoordinate(1);
+        levelMap[ladderCoordinates[0]][ladderCoordinates[1]] = '_';
+    }
 
     //This is where the actual running game will take place:
     while(gameQuit != 'q')
@@ -343,11 +342,6 @@ bool Level::loadLevel(int level, LoadSaveGame &cGameLoaderSaver, GlobalOptions c
         //wait for the user to give an input, then evaluate it:
         gameQuit = playerMove(cPlayer, playerMenu, cShop, cEnemies, cGameLoaderSaver, levelMap, level, cOptions, ladderCoordinates);
 
-        //move enemies: if enemy has killed the player(function returns true), return false and quit the game:
-        if(enemyMove(cEnemies, cPlayer, levelMap))
-            return false;
-
-
         if(gameQuit == 'q')
         {
             _levelLoader.close();
@@ -359,10 +353,12 @@ bool Level::loadLevel(int level, LoadSaveGame &cGameLoaderSaver, GlobalOptions c
             _levelLoader.close();
             return true;
         }
-        //system("pause");
 
-        //TEST
-        //gameQuit = true;
+
+        //move enemies: if enemy has killed the player(function returns true), return false and quit the game:
+        if(enemyMove(cEnemies, cPlayer, levelMap))
+            return false;
+
         if(cPlayer.getStat() == 'p')
         {
             if(!((poisonCounter++) % 5 && poisonCounter))
@@ -407,13 +403,13 @@ bool Level::enemyMove(list<Enemy> &cEnemy, Character &cPlayer, char levelMap[MAX
             if((rand() % 10) != 0)
             {
                 //by a 20% chance, let the player get poisoned or paralized. you cannot get both at once:
-                if(rand() % 5 == 0 && cPlayer.getStat() == 'n')
+                if(rand() % 8 == 0 && cPlayer.getStat() == 'n')
                 {
                     _cPaint.messageYouBecamePoisoned();
                     system("pause");
                     cPlayer.setStat('p');
                 }
-                if(rand() % 5 == 0 && cPlayer.getStat() == 'n')
+                if(rand() % 9 == 0 && cPlayer.getStat() == 'n')
                 {
                     _cPaint.messageYouBecameParalized();
                     system("pause");
@@ -495,6 +491,7 @@ char Level::playerMove(Character &cPlayer, Menu &playerMenu, Shop &cShop, list<E
         c = getch();
         list<Item> playerItems;
         list<Enemy>::iterator lit;
+        int enemyNum = 0;
 
         switch(c)
         {
@@ -526,19 +523,21 @@ char Level::playerMove(Character &cPlayer, Menu &playerMenu, Shop &cShop, list<E
                         if((*lit).dealDamage(cPlayer.attackEnemy()) == true)
                         {
                             //get some money and xp from the enemy:
-                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack());
-                            cPlayer.setExp(cPlayer.getExp()+(*lit).getAttack());
+                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack()*5);
+                            if(cPlayer.gainExp((*lit).getAttack()*20))
+                                _cPaint.messageLevelUp();
                             //turn the enemy tile from '_', to an empty '_':
                             levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '.';
                             cEnemies.erase(lit);
                             break;
                         }
+                        enemyNum++;
                     }
                     //c) there is a savestate:
                     if(*(cPlayer.getCoordinates()) > 0 && *(cSaveState.getCoordinates()) == *(cPlayer.getCoordinates())-1 && *(cSaveState.getCoordinates()+1) == *(cPlayer.getCoordinates()+1))
                     {
                         cPlayer.getPlayerItems(playerItems);
-                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates, playerItems);
+                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), enemyNum, cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates, cPlayer.getEquippedShield().getName(), cPlayer.getEquippedWearpon().getName(), playerItems);
                     }
                     //d) there is an exit:
                     if(*(cPlayer.getCoordinates()) > 0 && ladderCoordinates[0] == *(cPlayer.getCoordinates())-1 && ladderCoordinates[1] == *(cPlayer.getCoordinates()+1))
@@ -578,19 +577,21 @@ char Level::playerMove(Character &cPlayer, Menu &playerMenu, Shop &cShop, list<E
                         if((*lit).dealDamage(cPlayer.attackEnemy()) == true)
                         {
                             //get some money and xp from the enemy:
-                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack());
-                            cPlayer.setExp(cPlayer.getExp()+(*lit).getAttack());
+                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack()*5);
+                            if(cPlayer.gainExp((*lit).getAttack()*20))
+                                _cPaint.messageLevelUp();
                             //turn the enemy tile from '_', to an empty '_':
                             levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '.';
                             cEnemies.erase(lit);
                             break;
                         }
+                        enemyNum++;
                     }
                      //c) there is a savestate:
                     if(*(cPlayer.getCoordinates()) < MAX_LEVEL_DIMENSION && *(cSaveState.getCoordinates()) == *(cPlayer.getCoordinates())+1 && *(cSaveState.getCoordinates()+1) == *(cPlayer.getCoordinates()+1))
                     {
                         cPlayer.getPlayerItems(playerItems);
-                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates, playerItems);
+                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), enemyNum, cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates, cPlayer.getEquippedShield().getName(), cPlayer.getEquippedWearpon().getName(), playerItems);
                     }
                     //d) there is an exit:
                     if(*(cPlayer.getCoordinates()) < MAX_LEVEL_DIMENSION && ladderCoordinates[0] == *(cPlayer.getCoordinates())+1 && ladderCoordinates[1] == *(cPlayer.getCoordinates()+1))
@@ -627,19 +628,21 @@ char Level::playerMove(Character &cPlayer, Menu &playerMenu, Shop &cShop, list<E
                         if((*lit).dealDamage(cPlayer.attackEnemy()) == true)
                         {
                             //get some money and xp from the enemy:
-                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack());
-                            cPlayer.setExp(cPlayer.getExp()+(*lit).getAttack());
+                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack()*5);
+                            if(cPlayer.gainExp((*lit).getAttack()*20))
+                                _cPaint.messageLevelUp();
                             //turn the enemy tile from '_', to an empty '_':
                             levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '.';
                             cEnemies.erase(lit);
                             break;
                         }
+                        enemyNum++;
                     }
                      //c) there is a savestate:
                     if(*(cPlayer.getCoordinates()+1) > 0 && *(cSaveState.getCoordinates()) == *(cPlayer.getCoordinates()) && *(cSaveState.getCoordinates()+1) == *(cPlayer.getCoordinates()+1)-1)
                     {
                         cPlayer.getPlayerItems(playerItems);
-                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates, playerItems);
+                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), enemyNum, cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates,  cPlayer.getEquippedShield().getName(), cPlayer.getEquippedWearpon().getName(), playerItems);
                     }
                     //d) there is an exit:
                     if(*(cPlayer.getCoordinates()) > 0 && ladderCoordinates[0] == *(cPlayer.getCoordinates()) && ladderCoordinates[1] == *(cPlayer.getCoordinates()+1)-1)
@@ -676,19 +679,21 @@ char Level::playerMove(Character &cPlayer, Menu &playerMenu, Shop &cShop, list<E
                         if((*lit).dealDamage(cPlayer.attackEnemy()) == true)
                         {
                             //get some money and xp from the enemy:
-                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack());
-                            cPlayer.setExp(cPlayer.getExp()+(*lit).getAttack());
+                            cPlayer.setMoney(cPlayer.getMoney()+(*lit).getAttack()*5);
+                            if(cPlayer.gainExp((*lit).getAttack()*20))
+                                _cPaint.messageLevelUp();
                             //turn the enemy tile from '_', to an empty '_':
                             levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '.';
                             cEnemies.erase(lit);
                             break;
                         }
+                        enemyNum++;
                     }
                      //c) there is a savestate:
                     if(*(cPlayer.getCoordinates()+1) < MAX_LEVEL_DIMENSION  && *(cSaveState.getCoordinates()) == *(cPlayer.getCoordinates()) && *(cSaveState.getCoordinates()+1) == *(cPlayer.getCoordinates()+1)+1)
                     {
                         cPlayer.getPlayerItems(playerItems);
-                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates, playerItems);
+                        cSaveState.openSaveMenu(_cPaint, levelNum, cOptions.getNumOfEnemies(), enemyNum, cOptions.getSaveDuringGame(), cOptions.getShopAvailable(), cPlayer.getCurrHealth(), cPlayer.getMaxhealth(), cPlayer.getExp(), cPlayer.getMoney(), cPlayer.getStat(), *(cShop.getCoordinates()), *(cShop.getCoordinates()+1), *(cSaveState.getCoordinates()), *(cSaveState.getCoordinates()+1), *(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), ladderCoordinates, cPlayer.getEquippedShield().getName(), cPlayer.getEquippedWearpon().getName(), playerItems);
                     }
                     //d) there is an exit:
                     if(*(cPlayer.getCoordinates()) < MAX_LEVEL_DIMENSION && ladderCoordinates[0] == *(cPlayer.getCoordinates()) && ladderCoordinates[1] == *(cPlayer.getCoordinates()+1)+1)
@@ -741,19 +746,19 @@ void Level::randomizer(GlobalOptions &cOptions, Shop &cRandShop, LoadSaveGame &c
         cRandSaveState.setCoordinates(myY, myX);
     }
 
-    for(lit = randEnemies.begin(); lit != randEnemies.end(); lit++)
-    {
-        getRandomCoordinateForMapEnemies(myY, myX, levelMap);
-        (*lit).setCoordinates(myY, myX);
-    }
-
-    //get a random number in the size of the map, and do this until it will be an empty space '.':
-    getRandomCoordinateForMapEnemies(myY, myX, levelMap);
-    cRandPlayer.setCoordinates(myY, myX);
-
     //set a random exit to the next level:
     getRandomCoordinateForMap(myY, myX, levelMap);
     ladderCoordinates[0] = myY;
     ladderCoordinates[1] = myX;
+
+    for(lit = randEnemies.begin(); lit != randEnemies.end(); lit++)
+    {
+        getRandomCoordinateForMapEnemiesAndPlayer(myY, myX, levelMap);
+        (*lit).setCoordinates(myY, myX);
+    }
+
+    //get a random number in the size of the map, and do this until it will be an empty space '.':
+    getRandomCoordinateForMapEnemiesAndPlayer(myY, myX, levelMap);
+    cRandPlayer.setCoordinates(myY, myX);
 
 }
