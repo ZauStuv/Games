@@ -255,7 +255,7 @@ void PaintScreen::paintMainMenu(bool (*arrow)[2])
     printf("#                                                                    #\n");
     printf("######################################################################\n\n");
 
-    printf("2018 by Niznize\n\n\n");
+    printf("\n\n\n");
 
 
     if(arrow[0][0] == true)
