@@ -35,4 +35,4 @@ H: Ladder: Walk onto the ladder to enter to the next level!
 
 Other important notes:
 - Enemies do not move until you move.
-- You can get money and XP after defeating enemies. after reaching enough XP, you can level up! Level up boost the stats of your equipped wearpon
+- You can get money and XP after defeating enemies. after reaching enough XP, you can level up! Level up boost the stats of your equipped wearpon or shield.
