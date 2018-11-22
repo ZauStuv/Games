@@ -371,7 +371,19 @@ void PaintScreen::paintPlayerMenu(int arrow, int health, int maxHealth, char sta
     clearScreen();
 
     printf("Health: %d/%d\n", health, maxHealth);
-    printf("Status: %c\n", stat);
+    //print out player status with a complete string:
+    switch(stat)
+    {
+        case 'n':
+            printf("Status: n/a\n");
+            break;
+        case 'p':
+            printf("Status: poisoned\n");
+            break;
+        case 'z':
+            printf("Status: paralized\n");
+            break;
+    }
     printf("Money: %d\n", money);
     printf("Exp. points: %d\n", exp);
     printf("Level: %d\n", level);
