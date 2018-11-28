@@ -27,7 +27,8 @@ Each level is built up on a customizable sized map, from characters having the f
 @: Player. You can move up/down/left/right by pressing one of the WSAD buttons at once. You cannot walk through walls, enemies, shops
         or exits. You can also use the WSAD buttons to attack an enemy in front of you. You can also have different wearpons or shields,
         but only one of each equipped. You can change this item in the player menu.
-S: Enemy. They move in a random fashion, and can attack 1 tile away from you.
+S: Enemy. They move in a random fashion, and can attack 1 tile away from you. Once you attack the enemy, it will chase you until you defeat it
+or you die or you enter the next level, or you find a safe house and reload the state.
 M: Shop. You can buy many useful items here.
 Q: Safe house.
 #: Wall. You cannot walk through this place.

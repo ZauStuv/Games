@@ -285,10 +285,10 @@ void Shop::setItem(Item shopItem)
     _shopItems.push_back(shopItem);
 }
 
-void Shop::setCoordinates(int x, int y)
+void Shop::setCoordinates(int y, int x)
 {
-    _coordinates[0] = x;
-    _coordinates[1] = y;
+    _coordinates[0] = y;
+    _coordinates[1] = x;
 }
 void Shop::setItemArrow(int itemArrow)
 {

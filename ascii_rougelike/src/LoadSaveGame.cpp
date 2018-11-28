@@ -552,10 +552,10 @@ int LoadSaveGame::getLoadMenuArrow()
 
 
 //setters:
-void LoadSaveGame::setCoordinates(int x, int y)
+void LoadSaveGame::setCoordinates(int y, int x)
 {
-    _coordinates[0] = x;
-    _coordinates[1] = y;
+    _coordinates[0] = y;
+    _coordinates[1] = x;
 }
 
 //menu setters:

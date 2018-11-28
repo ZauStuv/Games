@@ -427,50 +427,58 @@ bool Level::enemyMove(list<Enemy> &cEnemy, Character &cPlayer, char levelMap[MAX
         }
         else
         {
-            switch(rand() % 5)
+            //after getting a hit by the player, don't let the player escape:
+            if((*lit).getHealth() != (*lit).getMaxHealth())
             {
-                //move up:
-                case 0:
-                    if(*((*lit).getCoordinates()) > 0 && levelMap[*((*lit).getCoordinates())-1][*((*lit).getCoordinates()+1)] == '.')
-                    {
-                        (*lit).setCoordinates(*((*lit).getCoordinates())-1, *((*lit).getCoordinates()+1));
-                        //turn the last tile back to '.', and turn the new one to '_':
-                        levelMap[*((*lit).getCoordinates())+1][*((*lit).getCoordinates()+1)] = '.';
-                        levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
+                (*lit).chasePlayer(*(cPlayer.getCoordinates()), *(cPlayer.getCoordinates()+1), levelMap);
+            }
+            else
+            {
+                switch(rand() % 5)
+                {
+                    //move up:
+                    case 0:
+                        if(*((*lit).getCoordinates()) > 0 && levelMap[*((*lit).getCoordinates())-1][*((*lit).getCoordinates()+1)] == '.')
+                        {
+                            (*lit).setCoordinates(*((*lit).getCoordinates())-1, *((*lit).getCoordinates()+1));
+                            //turn the last tile back to '.', and turn the new one to '_':
+                            levelMap[*((*lit).getCoordinates())+1][*((*lit).getCoordinates()+1)] = '.';
+                            levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
+                            break;
+                        }
+                    //move down:
+                    case 1:
+                        if(*((*lit).getCoordinates()) < MAX_LEVEL_DIMENSION && levelMap[*((*lit).getCoordinates())+1][*((*lit).getCoordinates()+1)] == '.')
+                        {
+                            (*lit).setCoordinates(*((*lit).getCoordinates())+1, *((*lit).getCoordinates()+1));
+                            levelMap[*((*lit).getCoordinates())-1][*((*lit).getCoordinates()+1)] = '.';
+                            levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
+                            break;
+                        }
+                    //move left:
+                    case 2:
+                        if(*((*lit).getCoordinates()+1) > 0 && levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)-1] == '.')
+                        {
+                            (*lit).setCoordinates(*((*lit).getCoordinates()), *((*lit).getCoordinates()+1)-1);
+                            //turn the last tile back to '.', and turn the new one to '_':
+                            levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)+1] = '.';
+                            levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
+                            break;
+                        }
+                    //move right:
+                    case 3:
+                        if(*((*lit).getCoordinates()+1) < MAX_LEVEL_DIMENSION && levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)+1] == '.')
+                        {
+                            (*lit).setCoordinates(*((*lit).getCoordinates()), *((*lit).getCoordinates()+1)+1);
+                            //turn the last tile back to '.', and turn the new one to '_':
+                            levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)-1] = '.';
+                            levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
+                            break;
+                        }
+                    //don't move anywhere:
+                    default:
                         break;
-                    }
-                //move down:
-                case 1:
-                    if(*((*lit).getCoordinates()) < MAX_LEVEL_DIMENSION && levelMap[*((*lit).getCoordinates())+1][*((*lit).getCoordinates()+1)] == '.')
-                    {
-                        (*lit).setCoordinates(*((*lit).getCoordinates())+1, *((*lit).getCoordinates()+1));
-                        levelMap[*((*lit).getCoordinates())-1][*((*lit).getCoordinates()+1)] = '.';
-                        levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
-                        break;
-                    }
-                //move left:
-                case 2:
-                    if(*((*lit).getCoordinates()+1) > 0 && levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)-1] == '.')
-                    {
-                        (*lit).setCoordinates(*((*lit).getCoordinates()), *((*lit).getCoordinates()+1)-1);
-                        //turn the last tile back to '.', and turn the new one to '_':
-                        levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)+1] = '.';
-                        levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
-                        break;
-                    }
-                //move right:
-                case 3:
-                    if(*((*lit).getCoordinates()+1) < MAX_LEVEL_DIMENSION && levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)+1] == '.')
-                    {
-                        (*lit).setCoordinates(*((*lit).getCoordinates()), *((*lit).getCoordinates()+1)+1);
-                        //turn the last tile back to '.', and turn the new one to '_':
-                        levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)-1] = '.';
-                        levelMap[*((*lit).getCoordinates())][*((*lit).getCoordinates()+1)] = '_';
-                        break;
-                    }
-                //don't move anywhere:
-                default:
-                    break;
+                }
             }
         }
     }
